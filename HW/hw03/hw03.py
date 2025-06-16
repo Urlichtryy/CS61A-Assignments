@@ -1,3 +1,5 @@
+from symbol import lambdef_nocond
+
 HW_SOURCE_FILE = __file__
 
 
@@ -25,6 +27,7 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    return (num_eights(n//10) if n>10 else 0)+(1 if n%10==8 else 0)
 
 
 def digit_distance(n):
@@ -47,6 +50,9 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n // 10 == 0:
+        return 0
+    return digit_distance(n//10)+abs((n//10)%10-n%10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -71,6 +77,11 @@ def interleaved_sum(n, odd_func, even_func):
     True
     """
     "*** YOUR CODE HERE ***"
+    def recur(k,odd_func, even_func):
+        if k>n:
+            return 0
+        return odd_func(k)+recur(k+1,even_func, odd_func)
+    return recur(1, odd_func, even_func)
 
 
 def next_smaller_dollar(bill):
@@ -107,6 +118,15 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def recur(total,dollar):
+        if total == 0:
+            return 1
+        if total < 0:
+            return 0
+        if dollar == None:
+            return 0
+        return recur(total,next_smaller_dollar(dollar))+recur(total-dollar,dollar)
+    return recur(total,100)
 
 
 def next_larger_dollar(bill):
@@ -143,6 +163,15 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def recur(total,dollar):
+        if total == 0:
+            return 1
+        if total < 0:
+            return 0
+        if dollar == None:
+            return 0
+        return recur(total,next_larger_dollar(dollar))+recur(total-dollar,dollar)
+    return recur(total,1)
 
 
 def print_move(origin, destination):
@@ -178,6 +207,16 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    def hanoi(n, start, end):
+        mid = 6-start-end
+        if n == 1:
+            print_move(start, end)
+            return
+        hanoi(n-1, start, mid)
+        print_move(start, end)
+        hanoi(n-1, mid, end)
+    return hanoi(n, start, end)
+
 
 
 from operator import sub, mul
@@ -193,5 +232,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f:f(f))(lambda f:lambda x:1 if x==0 else x*f(f)(x-1))
 
