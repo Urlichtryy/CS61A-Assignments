@@ -1,0 +1,2 @@
+
+print(len("abd yf"))
