@@ -40,6 +40,12 @@ class Account:
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
         "*** YOUR CODE HERE ***"
+        cur_num=self.balance
+        years=0
+        while cur_num <= amount:
+            cur_num =cur_num*(1+self.interest)
+            years += 1
+        return years
 
 
 class FreeChecking(Account):
@@ -70,6 +76,23 @@ class FreeChecking(Account):
     free_withdrawals = 2
 
     "*** YOUR CODE HERE ***"
+    def withdraw(self, amount):
+        if amount > self.balance:
+            self.free_withdrawals -=1
+            return "Insufficient funds"
+        else:
+            if self.free_withdrawals > 0:
+                self.free_withdrawals -= 1
+                self.balance -= amount
+                return self.balance
+            else:
+                self.free_withdrawals -=1
+                if amount + self.withdraw_fee > self.balance:
+                    return "Insufficient funds"
+                else:
+                    self.balance -= (amount + self.withdraw_fee)
+                    return self.balance
+
 
 
 def without(s, i):
@@ -86,6 +109,22 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
+    def copy_link(link):
+        if link is Link.empty:
+            return Link.empty
+        else:
+            return Link(link.first, copy_link(link.rest))
+    new_s=copy_link(s)
+    t=new_s
+    j=0
+    while j < i:
+        if t.rest is Link.empty:
+            return new_s
+        t=t.rest
+        j=j+1
+    t.first=t.rest.first
+    t.rest=t.rest.rest
+    return new_s
 
 
 def duplicate_link(s, val):
@@ -105,6 +144,15 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
+    if s is Link.empty:
+        return Link.empty
+    elif s.first == val:
+        new_link=Link(val,s.rest)
+        s.rest=new_link
+        duplicate_link(s.rest.rest, val)
+    else:
+        duplicate_link(s.rest, val)
+
 
 
 class Link:
